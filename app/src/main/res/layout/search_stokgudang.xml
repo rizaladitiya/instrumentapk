@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#EEEEEE"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:id="@+id/txtNamabarang"
+            android:layout_column="3"
+            android:layout_span="3"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:background="#DDDDDD"
+            android:textColor="@color/colorPrimaryDark" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp">
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:text="Kode"
+                android:textColor="#666161" />
+
+            <TextView
+                android:id="@+id/txtKode"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_column="3"
+                android:text="Value Tipe"
+                android:textColor="#666161" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp">
+
+            <TextView
+                android:id="@+id/textView27"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:text="Stock"
+                android:textColor="#666161" />
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Value Signal"
+                android:id="@+id/txtStock"
+                android:layout_column="3"
+                android:textColor="#666161" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp">
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:text="Satuan"
+                android:textColor="#666161" />
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Value Address"
+                android:id="@+id/txtSatuan"
+                android:layout_column="3"
+                android:textColor="#666161" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingTop="2dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="2dp">
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:text="Kelompok"
+                android:textColor="#666161" />
+
+            <TextView
+                android:id="@+id/txtKelompok"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_column="3"
+                android:text="Value Kelompok"
+                android:textColor="#666161" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
