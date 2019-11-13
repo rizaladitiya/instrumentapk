@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ import com.example.wiring.Fungsi;
 import com.example.wiring.R;
 import com.example.wiring.SessionManager;
 import com.example.wiring.ui.login.LoginActivity;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,6 +42,7 @@ public class HomeFragment extends Fragment {
     JSONParse mAuthTask = null;
     Drawable drawableRed;
     Drawable drawableGreen;
+    String token;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =

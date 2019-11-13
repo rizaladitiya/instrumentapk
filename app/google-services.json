@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "439119869365",
+    "firebase_url": "https://buanamegah-41eb2.firebaseio.com",
+    "project_id": "buanamegah-41eb2",
+    "storage_bucket": "buanamegah-41eb2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:439119869365:android:ffd473f5ea79a671bbd5fc",
+        "android_client_info": {
+          "package_name": "com.example.wiring"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "439119869365-ujb2vvi4c3mbuirnvu465gsgq9idra3b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.wiring",
+            "certificate_hash": "d549fd16f8c982ca209b14f53dd1d6981ee4cec4"
+          }
+        },
+        {
+          "client_id": "439119869365-4600br1et8q3niupkq69ljf0u6re2cs7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZLbFkh_eYezQSp_TP41mp2lPLU6ZVkYY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "439119869365-4600br1et8q3niupkq69ljf0u6re2cs7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
