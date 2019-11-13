@@ -52,7 +52,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
     private void sendNotif(RemoteMessage remoteMessage){
         Map<String,String> data=remoteMessage.getData();
-        String title = data.get("judul");
+        String title = data.get("title");
         String content=data.get("message");
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         String NOTIFICATION_CHANNEL_ID = "id1";
@@ -71,9 +71,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
                 .setContentTitle(title)
-                .setSmallIcon(R.color.colorAccent)
+                .setTicker("Buana Megah")
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(content))
                 .setContentText(content)
+                .setContentInfo("Information")
                 .setColor(24714829);
         notificationManager.notify(1,notiBuilder.build());
     }

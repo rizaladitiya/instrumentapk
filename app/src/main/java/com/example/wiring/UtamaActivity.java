@@ -50,6 +50,7 @@ public class UtamaActivity extends AppCompatActivity {
         final String token= FirebaseInstanceId.getInstance().getToken();
         //Toast.makeText(UtamaActivity.this, "Token ="+token, Toast.LENGTH_SHORT).show();
         Log.d("Token",token);
+        FirebaseMessaging.getInstance().subscribeToTopic("warning");
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         //navigationView.getMenu().getItem(2).setChecked(true);

@@ -37,8 +37,8 @@ dependencies {
 
     }
 
-    compile 'com.google.firebase:firebase-core:10.2.1'                        // this line must be included to integrate with Firebase
-    compile 'com.google.firebase:firebase-messaging:10.2.1'
+    implementation 'com.google.firebase:firebase-core:10.2.1'                        // this line must be included to integrate with Firebase
+    implementation 'com.google.firebase:firebase-messaging:10.2.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
