@@ -18,6 +18,7 @@ import androidx.core.app.NotificationCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -66,6 +67,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             notificationChannel.setShowBadge(true);
             notificationManager.createNotificationChannel(notificationChannel);
         }
+        int m = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
         NotificationCompat.Builder notiBuilder = new  NotificationCompat.Builder(getApplicationContext(),NOTIFICATION_CHANNEL_ID);
         notiBuilder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
@@ -77,7 +79,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentText(content)
                 .setContentInfo("Information")
                 .setColor(24714829);
-        notificationManager.notify(1,notiBuilder.build());
+
+        notificationManager.notify(m,notiBuilder.build());
     }
 
     private void sendNotification(String messageBody) {
@@ -98,7 +101,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0, notificationBuilder.build());
+        int m = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
+        notificationManager.notify(m, notificationBuilder.build());
     }
 
 }
