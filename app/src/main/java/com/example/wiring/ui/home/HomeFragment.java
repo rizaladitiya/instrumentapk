@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,11 +36,13 @@ import java.util.HashMap;
 
 public class HomeFragment extends Fragment {
 
-    TextView txtSpeed1,txtSpeed2,txtSpeed3;
-    TextView txtBreak1,txtBreak2,txtBreak3;
+    TextView txtSpeed1,txtSpeed2,txtSpeed3, txtHasil1, txtHasil2,txtHasil3, txtHasil3q1, txtHasil3q2, txtHasil3q3,txtHasil3q4;
+    TextView txtBreak1,txtBreak2,txtBreak3, txtHasil1q1, txtHasil1q2, txtHasil1q3,txtHasil1q4, txtHasil2q1, txtHasil2q2, txtHasil2q3,txtHasil2q4;
     private HomeViewModel homeViewModel;
+    LinearLayout total1,total2,total3;
     Button btnLogout;
     JSONParse mAuthTask = null;
+    JSONParseProd prodTask = null;
     Drawable drawableRed;
     Drawable drawableGreen;
     String token;
@@ -57,6 +60,10 @@ public class HomeFragment extends Fragment {
                 textView.setText(s);
             }
         });
+
+        total1 = root.findViewById(R.id.total1);
+        total2 = root.findViewById(R.id.total2);
+        total3 = root.findViewById(R.id.total3);
         TextView txtNama = root.findViewById(R.id.txtNama);
         txtSpeed1 = root.findViewById(R.id.Speed);
         txtSpeed2 = root.findViewById(R.id.Speed2);
@@ -65,6 +72,21 @@ public class HomeFragment extends Fragment {
         txtBreak1 = root.findViewById(R.id.txtBreak);
         txtBreak2 = root.findViewById(R.id.txtBreak2);
         txtBreak3 = root.findViewById(R.id.txtBreak3);
+        txtHasil1 = root.findViewById(R.id.txtHasil1);
+        txtHasil1q1 = root.findViewById(R.id.txtHasil1q1);
+        txtHasil1q2 = root.findViewById(R.id.txtHasil1q2);
+        txtHasil1q3 = root.findViewById(R.id.txtHasil1q3);
+        txtHasil1q4 = root.findViewById(R.id.txtHasil1q4);
+        txtHasil2 = root.findViewById(R.id.txtHasil2);
+        txtHasil2q1 = root.findViewById(R.id.txtHasil2q1);
+        txtHasil2q2 = root.findViewById(R.id.txtHasil2q2);
+        txtHasil2q3 = root.findViewById(R.id.txtHasil2q3);
+        txtHasil2q4 = root.findViewById(R.id.txtHasil2q4);
+        txtHasil3 = root.findViewById(R.id.txtHasil3);
+        txtHasil3q1 = root.findViewById(R.id.txtHasil3q1);
+        txtHasil3q2 = root.findViewById(R.id.txtHasil3q2);
+        txtHasil3q3 = root.findViewById(R.id.txtHasil3q3);
+        txtHasil3q4 = root.findViewById(R.id.txtHasil3q4);
         txtNama.setText(SessionManager.getLoggedInUser(getActivity()));
         btnLogout.setOnClickListener(new
             View.OnClickListener() {
@@ -84,32 +106,19 @@ public class HomeFragment extends Fragment {
                 getActivity(),
                 R.drawable.circle_shape_green
         );
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
 
-                //your 1st command
+        try {
+            //mAuthTask.cancel(true);
+            mAuthTask = new JSONParse();
+            mAuthTask.execute((Void) null);
 
-                //you can use a for here and check if the command was executed or just wait and execute the 2nd command
-                try {
-                    try {
-                        //mAuthTask.cancel(true);
-                        mAuthTask = new JSONParse();
-                        mAuthTask.execute((Void) null);
-                        //Toast.makeText(getApplicationContext(), txtCari.getText().toString(),Toast.LENGTH_LONG).show();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.e("JSON", "Malformed: \"" + e.toString() + "\"");
-                    }
-                    Thread.sleep(10000); //wait 2 seconds
-                    mAuthTask.cancel(true);
-                    Log.e("JSON", "Sleep 1");
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                //your 2nd command
-            }
-        }).start();
+            prodTask = new JSONParseProd();
+            prodTask.execute((Void) null);
+            //Toast.makeText(getApplicationContext(), txtCari.getText().toString(),Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("JSON", "Malformed: \"" + e.toString() + "\"");
+        }
 
         return root;
     }
@@ -243,6 +252,94 @@ public class HomeFragment extends Fragment {
                     );
                     txtBreak3.setText("Run");
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                //Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
+
+            }
+
+        }
+    }
+
+    private class JSONParseProd extends AsyncTask<Void, Void, Boolean> {
+        //private ProgressDialog pDialog;
+
+        JSONObject json;
+        String hasil1,hasil2,hasil3;
+        String hasil1q1,hasil2q1,hasil3q1;
+        String hasil1q2,hasil2q2,hasil3q2;
+        String hasil1q3,hasil2q3,hasil3q3;
+        String hasil1q4,hasil2q4,hasil3q4;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //listdata.setText(hasil);
+            total1.setVisibility(View.GONE);
+            total2.setVisibility(View.GONE);
+            total3.setVisibility(View.GONE);
+
+        }
+
+        @Override
+
+
+        protected Boolean doInBackground(Void... params) {
+            //while(!this.isCancelled()) {
+            // doyourjobhere
+
+            int jam = Fungsi.hour();
+            if(jam>=9){
+                json = Fungsi.hasilProduksi(Fungsi.getDateString(Fungsi.now()));
+            }else {
+                json = Fungsi.hasilProduksi(Fungsi.getDateString(Fungsi.yesterday()));
+            }
+            try {
+                //final String[] str1 = new String[jsonArray.length()];
+
+                    hasil1 = Fungsi.thousandFormat(json.getString("pm1hasilkg"))+" Kg";
+                    hasil1q1 = "Q1 "+Fungsi.thousandFormat(json.getString("pm1hasilkgq1"))+" Kg";
+                    hasil1q2 = "Q2 "+Fungsi.thousandFormat(json.getString("pm1hasilkgq2"))+" Kg";
+                    hasil1q3 = "Q3 "+Fungsi.thousandFormat(json.getString("pm1hasilkgq3"))+" Kg";
+                    hasil1q4 = "Q4 "+Fungsi.thousandFormat(json.getString("pm1hasilkgq4"))+" Kg";
+                    hasil2 = Fungsi.thousandFormat(json.getString("pm2hasilkg"))+" Kg";
+                    hasil2q1 = "Q1 "+Fungsi.thousandFormat(json.getString("pm2hasilkgq1"))+" Kg";
+                    hasil2q2 = "Q2 "+Fungsi.thousandFormat(json.getString("pm2hasilkgq2"))+" Kg";
+                    hasil2q3 = "Q3 "+Fungsi.thousandFormat(json.getString("pm2hasilkgq3"))+" Kg";
+                    hasil2q4 = "Q4 "+Fungsi.thousandFormat(json.getString("pm2hasilkgq4"))+" Kg";
+
+            } catch (Exception e) {
+
+            }
+            //}
+
+            return true;
+            // Getting JSON from URL
+
+
+        }
+        @Override
+        protected void onPostExecute ( final Boolean success){
+            try {
+                // Getting JSON Array
+
+
+
+                txtHasil1.setText(hasil1);
+                txtHasil1q1.setText(hasil1q1);
+                txtHasil1q2.setText(hasil1q2);
+                txtHasil1q3.setText(hasil1q3);
+                txtHasil1q4.setText(hasil1q4);
+                txtHasil2.setText(hasil2);
+                txtHasil2q1.setText(hasil2q1);
+                txtHasil2q2.setText(hasil2q2);
+                txtHasil2q3.setText(hasil2q3);
+                txtHasil2q4.setText(hasil2q4);
+
+                total1.setVisibility(View.VISIBLE);
+                total2.setVisibility(View.VISIBLE);
+                total3.setVisibility(View.VISIBLE);
+
             } catch (Exception e) {
                 e.printStackTrace();
                 //Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();

@@ -9,6 +9,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.security.MessageDigest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -134,6 +138,61 @@ public class Fungsi {
             e.printStackTrace();
         }
         return json;
+    }
+
+    public static JSONObject hasilProduksi(String tanggal) {
+        HttpRequest req = null;
+        try {
+            req = new HttpRequest("http://36.67.32.45:898/laporan/halaman/produksi.php?aksi=hasil&tgl="+tanggal);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        JSONObject json = null;
+        try {
+            json = req.preparePost().sendAndReadJSON();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    public static String thousandFormat(String number) {
+        int num = 0;
+        try
+        {
+            if(number != null)
+                num = Integer.parseInt(number);
+        }
+        catch (NumberFormatException e)
+        {
+            num = 0;
+        }
+        String str = String.format("%,d", num);
+        return str;
+    }
+
+    public static Date yesterday() {
+        final Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        return cal.getTime();
+    }
+
+    public static Date now() {
+        final Calendar cal = Calendar.getInstance();
+        return cal.getTime();
+    }
+
+    public static int hour() {
+        final Calendar cal = Calendar.getInstance();
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        return hour;
+    }
+
+    public static String getDateString(Date datetime) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(datetime);
     }
 
     public static JSONObject postChecklist(HashMap<String, String> params) {
