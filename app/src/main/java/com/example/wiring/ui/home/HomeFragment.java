@@ -263,7 +263,7 @@ public class HomeFragment extends Fragment {
 
     private class JSONParseProd extends AsyncTask<Void, Void, Boolean> {
         //private ProgressDialog pDialog;
-
+        JSONArray jsonArray;
         JSONObject json;
         String hasil1,hasil2,hasil3;
         String hasil1q1,hasil2q1,hasil3q1;
@@ -290,13 +290,13 @@ public class HomeFragment extends Fragment {
 
             int jam = Fungsi.hour();
             if(jam>=9){
-                json = Fungsi.hasilProduksi(Fungsi.getDateString(Fungsi.now()));
+                jsonArray = Fungsi.hasilProduksiBaru(Fungsi.getDateString(Fungsi.now()));
             }else {
-                json = Fungsi.hasilProduksi(Fungsi.getDateString(Fungsi.yesterday()));
+                jsonArray = Fungsi.hasilProduksiBaru(Fungsi.getDateString(Fungsi.yesterday()));
             }
             try {
                 //final String[] str1 = new String[jsonArray.length()];
-
+                    /*
                     hasil1 = Fungsi.thousandFormat(json.getString("pm1hasilkg"))+" Kg";
                     hasil1q1 = "Q1 "+Fungsi.thousandFormat(json.getString("pm1hasilkgq1"))+" Kg";
                     hasil1q2 = "Q2 "+Fungsi.thousandFormat(json.getString("pm1hasilkgq2"))+" Kg";
@@ -307,6 +307,60 @@ public class HomeFragment extends Fragment {
                     hasil2q2 = "Q2 "+Fungsi.thousandFormat(json.getString("pm2hasilkgq2"))+" Kg";
                     hasil2q3 = "Q3 "+Fungsi.thousandFormat(json.getString("pm2hasilkgq3"))+" Kg";
                     hasil2q4 = "Q4 "+Fungsi.thousandFormat(json.getString("pm2hasilkgq4"))+" Kg";
+
+                     */
+                Log.d("json", jsonArray.toString());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    json = jsonArray.getJSONObject(i);
+
+
+                    /* Hasil Produksi PM1 */
+                    if (json.getString("pm").equals("1") && json.getString("mutu").equals("1")) {
+                        hasil1q1 = json.getString("jumlah");
+                    }
+                    if (json.getString("pm").equals("1") && json.getString("mutu").equals("2")) {
+                        hasil1q2 = json.getString("jumlah");
+                    }
+                    if (json.getString("pm").equals("1") && json.getString("mutu").equals("3")) {
+                        hasil1q3 = json.getString("jumlah");
+                    }
+                    if (json.getString("pm").equals("1") && json.getString("mutu").equals("4")) {
+                        hasil1q4 = json.getString("jumlah");
+                    }
+
+
+                    /* Hasil Produksi PM2 */
+                    if (json.getString("pm").equals("2") && json.getString("mutu").equals("1")) {
+                        hasil2q1 = json.getString("jumlah");
+                    }
+                    if (json.getString("pm").equals("2") && json.getString("mutu").equals("2")) {
+                        hasil2q2 = json.getString("jumlah");
+                    }
+                    if (json.getString("pm").equals("2") && json.getString("mutu").equals("3")) {
+                        hasil2q3 = json.getString("jumlah");
+                    }
+                    if (json.getString("pm").equals("2") && json.getString("mutu").equals("4")) {
+                        hasil2q4 = json.getString("jumlah");
+                    }
+
+
+                    /* Hasil Produksi PM3 */
+                    if (json.getString("pm").equals("3") && json.getString("mutu").equals("1")) {
+                        hasil3q1 = json.getString("jumlah");
+                    }
+                    if (json.getString("pm").equals("3") && json.getString("mutu").equals("2")) {
+                        hasil3q2 = json.getString("jumlah");
+                    }
+                    if (json.getString("pm").equals("3") && json.getString("mutu").equals("3")) {
+                        hasil3q3 = json.getString("jumlah");
+                    }
+                    if (json.getString("pm").equals("3") && json.getString("mutu").equals("4")) {
+                        hasil3q4 = json.getString("jumlah");
+                    }
+
+
+                }
+
 
             } catch (Exception e) {
 
@@ -324,17 +378,40 @@ public class HomeFragment extends Fragment {
                 // Getting JSON Array
 
 
+                hasil1 = String.valueOf(Fungsi.cekNull(hasil1q1)+Fungsi.cekNull(hasil1q2)+Fungsi.cekNull(hasil1q3)+Fungsi.cekNull(hasil1q4));
+                hasil2 = String.valueOf(Fungsi.cekNull(hasil2q1)+Fungsi.cekNull(hasil2q2)+Fungsi.cekNull(hasil2q3)+Fungsi.cekNull(hasil2q4));
+                hasil3 = String.valueOf(Fungsi.cekNull(hasil3q1)+Fungsi.cekNull(hasil3q2)+Fungsi.cekNull(hasil3q3)+Fungsi.cekNull(hasil3q4));
+                hasil1q1 = Fungsi.totalKg(hasil1q1);
+                hasil1q2 = Fungsi.totalKg(hasil1q2);
+                hasil1q3 = Fungsi.totalKg(hasil1q3);
+                hasil1q4 = Fungsi.totalKg(hasil1q4);
+                hasil2q1 = Fungsi.totalKg(hasil2q1);
+                hasil2q2 = Fungsi.totalKg(hasil1q2);
+                hasil2q3 = Fungsi.totalKg(hasil2q3);
+                hasil2q4 = Fungsi.totalKg(hasil2q4);
+                hasil3q1 = Fungsi.totalKg(hasil3q1);
+                hasil3q2 = Fungsi.totalKg(hasil3q2);
+                hasil3q3 = Fungsi.totalKg(hasil3q3);
+                hasil3q4 = Fungsi.totalKg(hasil3q4);
+                hasil1 = Fungsi.totalKg(hasil1);
+                hasil2 = Fungsi.totalKg(hasil2);
+                hasil3 = Fungsi.totalKg(hasil3);
 
                 txtHasil1.setText(hasil1);
-                txtHasil1q1.setText(hasil1q1);
-                txtHasil1q2.setText(hasil1q2);
-                txtHasil1q3.setText(hasil1q3);
-                txtHasil1q4.setText(hasil1q4);
+                txtHasil1q1.setText("Q1 : "+hasil1q1);
+                txtHasil1q2.setText("Q2 : "+hasil1q2);
+                txtHasil1q3.setText("Q3 : "+hasil1q3);
+                txtHasil1q4.setText("Q4 : "+hasil1q4);
                 txtHasil2.setText(hasil2);
-                txtHasil2q1.setText(hasil2q1);
-                txtHasil2q2.setText(hasil2q2);
-                txtHasil2q3.setText(hasil2q3);
-                txtHasil2q4.setText(hasil2q4);
+                txtHasil2q1.setText("Q1 : "+hasil2q1);
+                txtHasil2q2.setText("Q2 : "+hasil2q2);
+                txtHasil2q3.setText("Q3 : "+hasil2q3);
+                txtHasil2q4.setText("Q4 : "+hasil2q4);
+                txtHasil3.setText(hasil3);
+                txtHasil3q1.setText("Q1 : "+hasil3q1);
+                txtHasil3q2.setText("Q2 : "+hasil3q2);
+                txtHasil3q3.setText("Q3 : "+hasil3q3);
+                txtHasil3q4.setText("Q4 : "+hasil3q4);
 
                 total1.setVisibility(View.VISIBLE);
                 total2.setVisibility(View.VISIBLE);

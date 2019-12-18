@@ -158,6 +158,39 @@ public class Fungsi {
         return json;
     }
 
+    public static JSONArray hasilProduksiBaru(String tanggal) {
+        HttpRequest req = null;
+        try {
+            req = new HttpRequest("http://36.67.32.45:898/api/barang/hasilprodtotal/"+tanggal);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        JSONArray json = null;
+        try {
+            json = req.preparePost().sendAndReadJSONArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+
+    public static Integer cekNull(String number) {
+        int num = 0;
+        try
+        {
+            if(number != null)
+                num = Integer.parseInt(number);
+        }
+        catch (NumberFormatException e)
+        {
+            num = 0;
+        }
+        return num;
+    }
+
     public static String thousandFormat(String number) {
         int num = 0;
         try
@@ -171,6 +204,12 @@ public class Fungsi {
         }
         String str = String.format("%,d", num);
         return str;
+    }
+
+    public static String totalKg(String total) {
+        String hasil;
+        hasil = thousandFormat(total)+" Kg";
+        return hasil;
     }
 
     public static Date yesterday() {
