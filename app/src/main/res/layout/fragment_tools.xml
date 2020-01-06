@@ -38,20 +38,29 @@
             <EditText
                 android:id="@+id/txtTgl"
                 android:layout_width="240dp"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:inputType="text"
                 android:hint="YYYY-MM-DD"
+                />
+
+            <EditText
+                android:id="@+id/txtCari"
+                android:layout_width="240dp"
+                android:layout_height="60dp"
+                android:inputType="text"
+                android:hint="Cari....."
+                android:visibility="gone"
                 />
 
             <Button
                 android:id="@+id/btnCari"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:text="Cari"
-                android:layout_toRightOf="@id/txtCari"
                 />
 
         </LinearLayout>
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"

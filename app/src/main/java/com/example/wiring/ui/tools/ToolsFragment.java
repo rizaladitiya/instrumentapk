@@ -1,11 +1,15 @@
 package com.example.wiring.ui.tools;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -27,6 +31,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.wiring.Fungsi;
+import com.example.wiring.Joblist;
 import com.example.wiring.R;
 import com.example.wiring.global;
 import com.example.wiring.ui.gallery.GalleryFragment;
@@ -49,10 +54,10 @@ public class ToolsFragment extends Fragment {
     ProgressDialog pDialog;
     DatePickerDialog datePickerDialog;
     private SimpleDateFormat dateFormatter;
-    EditText txtTgl;
+    EditText txtTgl, txtCari;
     Button btnCari, btnTampil;
     ListView list;
-    LinearLayout relLayOut2;
+    LinearLayout relLayOut2, layoutIsi;
     String selectedSpinner;
     Spinner txtPilih;
     JSONParse mAuthTask = null;
@@ -79,7 +84,9 @@ public class ToolsFragment extends Fragment {
         btnTampil = (Button)  root.findViewById(R.id.btnTampil);
         list = (ListView)  root.findViewById(R.id.listView);
         txtPilih = (Spinner)  root.findViewById(R.id.txtPilih);
+        txtCari = (EditText)  root.findViewById(R.id.txtCari);
         relLayOut2 = (LinearLayout)  root.findViewById(R.id.relLayOut2);
+        layoutIsi = (LinearLayout)  root.findViewById(R.id.layoutIsi);
         txtTgl.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -92,12 +99,35 @@ public class ToolsFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // your code here
                 selectedSpinner = txtPilih.getSelectedItem().toString();
-                if(selectedSpinner.equals("Tambah (add)")){
-                    relLayOut2.setVisibility(View.GONE);
-                }else if(selectedSpinner.equals("View Tanggal")){
-                    relLayOut2.setVisibility(View.VISIBLE);
-                }else{
-                    relLayOut2.setVisibility(View.GONE);
+
+                switch (selectedSpinner) {
+                    case "Tambah (add)":
+                        relLayOut2.setVisibility(View.GONE);
+                        break;
+                    case "View Tanggal":
+                        relLayOut2.setVisibility(View.VISIBLE);
+                        txtCari.setVisibility(View.GONE);
+                        txtTgl.setVisibility(View.VISIBLE);
+                        break;
+                    case "Cari":
+                        relLayOut2.setVisibility(View.VISIBLE);
+                        txtCari.setVisibility(View.VISIBLE);
+                        txtTgl.setVisibility(View.GONE);
+                        break;
+                    case "View To Do":
+                        relLayOut2.setVisibility(View.GONE);
+                        break;
+                    case "View Doing":
+                        relLayOut2.setVisibility(View.GONE);
+                        break;
+                    case "View Done":
+                        relLayOut2.setVisibility(View.VISIBLE);
+                        txtCari.setVisibility(View.GONE);
+                        txtTgl.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        relLayOut2.setVisibility(View.GONE);
+                        break;
                 }
             }
 
@@ -111,14 +141,48 @@ public class ToolsFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
+
                 try {
                     selectedSpinner = txtPilih.getSelectedItem().toString();
-                    if(selectedSpinner.equals("Tambah (add)")){
-                        relLayOut2.setVisibility(View.GONE);
-                    }else if(selectedSpinner.equals("View Tanggal")){
-                        relLayOut2.setVisibility(View.VISIBLE);
-                    }else{
-                        relLayOut2.setVisibility(View.GONE);
+                    switch (selectedSpinner) {
+                        case "Tambah (add)":
+                            relLayOut2.setVisibility(View.GONE);
+                            Intent modify_intent = new Intent(getActivity(), Joblist.class);
+                            modify_intent.putExtra("devicetag", "");
+                            modify_intent.putExtra("description", "");
+                            modify_intent.putExtra("id", "0");
+                            modify_intent.putExtra("main_wiring", "0");
+                            modify_intent.putExtra("status", "To Do");
+                            startActivity(modify_intent);
+                            ((Activity) getActivity()).overridePendingTransition(0, 0);
+                            break;
+                        case "View Tanggal":
+                            relLayOut2.setVisibility(View.VISIBLE);
+                            txtCari.setVisibility(View.GONE);
+                            txtTgl.setVisibility(View.VISIBLE);
+                            break;
+                        case "Cari":
+                            relLayOut2.setVisibility(View.VISIBLE);
+                            txtCari.setVisibility(View.VISIBLE);
+                            txtTgl.setVisibility(View.GONE);
+                            break;
+                        case "View To Do":
+                            relLayOut2.setVisibility(View.GONE);
+                            sendRequest(selectedSpinner);
+                            break;
+                        case "View Doing":
+                            relLayOut2.setVisibility(View.GONE);
+                            sendRequest(selectedSpinner);
+                            break;
+                        case "View Done":
+                            txtCari.setVisibility(View.GONE);
+                            txtTgl.setVisibility(View.VISIBLE);
+                            txtCari.setVisibility(View.GONE);
+                            txtTgl.setVisibility(View.VISIBLE);
+                            break;
+                        default:
+                            relLayOut2.setVisibility(View.GONE);
+                            break;
                     }
                     //Toast.makeText(getApplicationContext(), txtCari.getText().toString(),Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
@@ -132,14 +196,7 @@ public class ToolsFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-                try {
-                    mAuthTask = new JSONParse(txtTgl.getText().toString());
-                    mAuthTask.execute((Void) null);
-                    //Toast.makeText(getApplicationContext(), txtCari.getText().toString(),Toast.LENGTH_LONG).show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e("JSON", "Malformed: \"" + e.toString() + "\"");
-                }
+                sendRequest(selectedSpinner);
                 try  {
                     InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
@@ -152,6 +209,16 @@ public class ToolsFragment extends Fragment {
         return root;
     }
 
+    private void sendRequest(String selected){
+        try {
+            mAuthTask = new JSONParse(selected);
+            mAuthTask.execute((Void) null);
+            //Toast.makeText(getApplicationContext(), txtCari.getText().toString(),Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("JSON", "Malformed: \"" + e.toString() + "\"");
+        }
+    }
     private void showDateDialog(){
 
         /**
@@ -190,13 +257,88 @@ public class ToolsFragment extends Fragment {
          */
         datePickerDialog.show();
     }
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+    {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.setHeaderTitle("Pilih Menu");
+        menu.add(0, v.getId(), 0, "To Do");
+        menu.add(0, v.getId(), 1, "Doing");
+        menu.add(0, v.getId(), 2, "Done");
+
+    }
+
+    @Override
+
+    public boolean onContextItemSelected(MenuItem item) {
+        Log.d("contextmenu",item.getTitle().toString());
+
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+
+        String devicetag = oslist.get(+info.position).get("devicetag").toString();
+        String description = oslist.get(+info.position).get("description").toString();
+        String id = oslist.get(+info.position).get("id").toString();
+        String status;
+        /*
+        if(item.getTitle()=="Checklist")
+        {
+            Intent modify_intent = new Intent(getActivity(), Joblist.class);
+            modify_intent.putExtra("devicetag", devicetag);
+            modify_intent.putExtra("description", description);
+            modify_intent.putExtra("id", id);
+            startActivity(modify_intent);
+            ((Activity) getActivity()).overridePendingTransition(0, 0);
+        } else if(item.getTitle()=="Joblist")
+        {
+            Intent modify_intent = new Intent(getActivity(), Joblist.class);
+            modify_intent.putExtra("devicetag", devicetag);
+            modify_intent.putExtra("description", description);
+            modify_intent.putExtra("main_wiring", id);
+            modify_intent.putExtra("id", "0");
+            startActivity(modify_intent);
+            ((Activity) getActivity()).overridePendingTransition(0, 0);
+
+            Log.d("contextmenu","joblist");
+
+        }else{
+            Log.d("contextmenu","tidak ada yang dipilih");
+        }
+        */
+        switch (item.getTitle().toString()) {
+            case "To Do":
+                status = "To Do";
+                break;
+            case "Doing":
+                status = "Doing";
+                break;
+            case "Done":
+                status = "Done";
+                break;
+            default:
+                status = "To Do";
+                break;
+        }
+        Intent modify_intent = new Intent(getActivity(), Joblist.class);
+        modify_intent.putExtra("devicetag", devicetag);
+        modify_intent.putExtra("description", description);
+        modify_intent.putExtra("status", status);
+        modify_intent.putExtra("main_wiring", id);
+        modify_intent.putExtra("id", "0");
+        startActivity(modify_intent);
+        ((Activity) getActivity()).overridePendingTransition(0, 0);
+
+        Log.d("contextmenu","joblist");
+        return super.onContextItemSelected(item);
+    }
     private class JSONParse extends AsyncTask<Void, Void, Boolean> {
         //private ProgressDialog pDialog;
-        String mtgl,mtgl2,muser;
-        JSONParse(String tgl) {
+        String mtgl,mtgl2,muser,maction,mcari;
+        JSONParse(String action) {
 
-            mtgl = tgl;
-            mtgl2 = tgl;
+            mtgl = txtTgl.getText().toString();
+            mtgl2 = txtTgl.getText().toString();
+            mcari = txtCari.getText().toString();
+            maction = action;
             muser = global.user;
         }
         @Override
@@ -221,33 +363,59 @@ public class ToolsFragment extends Fragment {
         protected Boolean doInBackground(Void... params) {
 
             try {
+                switch (maction) {
+                    case "Tambah (add)":
 
-                jsonArray = Fungsi.cariChecklist(mtgl,mtgl2,muser);
+                        break;
+                    case "Cari":
+                        jsonArray = Fungsi.cariJoblist(mcari);
+                        break;
+                    case "View Tanggal":
+                        jsonArray = Fungsi.cariJoblistTanggal(mtgl,mtgl2);
+                        break;
+                    case "View To Do":
+                        jsonArray = Fungsi.cariJoblistToDo();
+                        break;
+                    case "View Doing":
+                        jsonArray = Fungsi.cariJoblistDoing();
+                        break;
+                    case "View Done":
+                        jsonArray = Fungsi.cariJoblistDone(mtgl,mtgl2);
+                        break;
+                    default:
+
+                        break;
+                }
+
 
                 JSONObject json;
-
+                Log.d("action",maction);
                 Log.d("jsonArray",jsonArray.length() + jsonArray.toString());
                 for (int i = 0; i < jsonArray.length(); i++) {
                     json = jsonArray.getJSONObject(i);
 
-                    Log.d("map",json.toString());
                     map = new HashMap<String, String>();
                     map.put("id", json.getString("id"));
-                    map.put("devicetag", json.getString("devicetag"));
-                    map.put("description", json.getString("description"));
-                    map.put("brand", json.getString("brand"));
-                    map.put("regulator", json.getString("regulator"));
-                    map.put("wrapping", json.getString("wrapping"));
-                    map.put("label", json.getString("label"));
-                    map.put("user", json.getString("user"));
-                    map.put("tanggal", json.getString("tanggal"));
-                    map.put("keterangan", json.getString("keterangan"));
+                    map.put("devicetag", json.getString("devicetag").replace("null", ""));
+                    map.put("description", json.getString("description").replace("null", ""));
+                    map.put("masalah", json.getString("masalah").replace("null", ""));
+                    map.put("tindakan", json.getString("tindakan").replace("null", ""));
+                    map.put("koreksi", json.getString("koreksi").replace("null", ""));
+                    map.put("keterangan", json.getString("keterangan").replace("null", ""));
+                    map.put("created", Fungsi.parseTanggal(json.getString("created")));
+                    map.put("doing", Fungsi.parseTanggal(json.getString("doing").replace("null", "")));
+                    map.put("user_created", json.getString("user_created").replace("null", ""));
+                    map.put("user_doing", json.getString("user_doing").replace("null", ""));
+                    map.put("user_done", json.getString("user_done").replace("null", ""));
+                    map.put("status", json.getString("status").replace("null", ""));
+                    map.put("done", Fungsi.parseTanggal(json.getString("done").replace("null", "")));
 
+                    Log.d("map",json.toString());
                     oslist.add(map);
                     adapter = new SimpleAdapter(
-                            getActivity().getApplicationContext(), oslist, R.layout.search_checklist, new String[] {
-                            "id","devicetag","description","brand","regulator","wrapping","label","tanggal","keterangan"}, new int[] {
-                            R.id.id,R.id.tagname,R.id.description,R.id.plc,R.id.txtRegulator,R.id.txtWrapping,R.id.txtLabel,R.id.txtTanggal,R.id.txtKeterangan});
+                            getActivity().getApplicationContext(), oslist, R.layout.search_joblist, new String[] {
+                            "id","devicetag","description","masalah","tindakan","user_created","user_doing","user_done","created","doing","done"}, new int[] {
+                            R.id.id,R.id.tagname,R.id.description,R.id.textMasalah,R.id.txtSolusi,R.id.txtUserCreated,R.id.txtUserDoing,R.id.txtUserDone,R.id.txtTodo,R.id.txtDoing,R.id.txtDone});
 
                     //oslist = new ArrayList<HashMap<String, String>>();;
                     //registerForContextMenu(list);
@@ -266,83 +434,14 @@ public class ToolsFragment extends Fragment {
         }
         @Override
         protected void onPostExecute ( final Boolean success){
+
+            layoutIsi.setVisibility(View.VISIBLE);
             pDialog.dismiss();
-            Log.d("oslist",oslist.toString());
             list.setAdapter(adapter);
+            registerForContextMenu(list);
+            Log.d("oslist",oslist.toString());
 
         }
     }
 
-    private class JSONParseUnclear extends AsyncTask<Void, Void, Boolean> {
-        //private ProgressDialog pDialog;
-        String mtgl,mtgl2,muser;
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Getting Data ...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
-
-
-            adapter = null;
-            //map.clear();
-            oslist.clear();
-        }
-
-        @Override
-
-
-        protected Boolean doInBackground(Void... params) {
-
-            try {
-
-                jsonArray = Fungsi.cariChecklist(mtgl,mtgl2,muser);
-
-                JSONObject json;
-
-                Log.d("jsonArray",jsonArray.length() + jsonArray.toString());
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    json = jsonArray.getJSONObject(i);
-
-                    Log.d("map",json.toString());
-                    map = new HashMap<String, String>();
-                    map.put("id", json.getString("id"));
-                    map.put("devicetag", json.getString("devicetag"));
-                    map.put("description", json.getString("description"));
-                    map.put("brand", json.getString("brand"));
-                    map.put("regulator", json.getString("regulator"));
-                    map.put("wrapping", json.getString("wrapping"));
-                    map.put("label", json.getString("label"));
-                    map.put("user", json.getString("user"));
-                    map.put("tanggal", json.getString("tanggal"));
-                    map.put("keterangan", json.getString("keterangan"));
-
-                    oslist.add(map);
-                    adapter = new SimpleAdapter(
-                            getActivity().getApplicationContext(), oslist, R.layout.search_checklist, new String[] {
-                            "id","devicetag","description","brand","regulator","wrapping","label","tanggal","keterangan"}, new int[] {
-                            R.id.id,R.id.tagname,R.id.description,R.id.plc,R.id.txtRegulator,R.id.txtWrapping,R.id.txtLabel,R.id.txtTanggal,R.id.txtKeterangan});
-
-                }
-            } catch (Exception e){
-
-            }
-
-
-            return true;
-            // Getting JSON from URL
-
-
-        }
-        @Override
-        protected void onPostExecute ( final Boolean success){
-            pDialog.dismiss();
-            Log.d("oslist",oslist.toString());
-            list.setAdapter(adapter);
-
-        }
-    }
 }

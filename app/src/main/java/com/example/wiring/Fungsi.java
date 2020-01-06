@@ -1,6 +1,9 @@
 package com.example.wiring;
 
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,10 +13,14 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.security.MessageDigest;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 /**
  * Created by Rizal on 07/10/2015.
@@ -111,6 +118,104 @@ public class Fungsi {
         params.put("from", from);
         params.put("to", to);
         params.put("user", user);
+        JSONArray json = null;
+        try {
+            json = req.preparePost().withData(params).sendAndReadJSONArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    public static JSONArray cariJoblistTanggal(String from, String to) {
+        HttpRequest req = null;
+        try {
+            req = new HttpRequest("http://36.67.32.45/buanamegah/joblist/viewtgl");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        HashMap<String, String> params = new HashMap<>();
+        params.put("from", from);
+        params.put("to", to);
+        JSONArray json = null;
+        try {
+            json = req.preparePost().withData(params).sendAndReadJSONArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    public static JSONArray cariJoblist(String keyword) {
+        HttpRequest req = null;
+        try {
+            req = new HttpRequest("http://36.67.32.45/buanamegah/joblist/search");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        HashMap<String, String> params = new HashMap<>();
+        params.put("keyword", keyword);
+        JSONArray json = null;
+        try {
+            json = req.preparePost().withData(params).sendAndReadJSONArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    public static JSONArray cariJoblistToDo() {
+        HttpRequest req = null;
+        try {
+            req = new HttpRequest("http://36.67.32.45/buanamegah/joblist/viewtodo");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        JSONArray json = null;
+        try {
+            json = req.preparePost().sendAndReadJSONArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    public static JSONArray cariJoblistDoing() {
+        HttpRequest req = null;
+        try {
+            req = new HttpRequest("http://36.67.32.45/buanamegah/joblist/viewdoing");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        JSONArray json = null;
+        try {
+            json = req.preparePost().sendAndReadJSONArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    public static JSONArray cariJoblistDone(String from, String to) {
+        HttpRequest req = null;
+        try {
+            req = new HttpRequest("http://36.67.32.45/buanamegah/joblist/viewdone");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        HashMap<String, String> params = new HashMap<>();
+        params.put("from", from);
+        params.put("to", to);
         JSONArray json = null;
         try {
             json = req.preparePost().withData(params).sendAndReadJSONArray();
@@ -252,6 +357,34 @@ public class Fungsi {
         return json;
     }
 
+    public static JSONObject postJoblist(HashMap<String, String> params) {
+        HttpRequest req = null;
+        try {
+            req = new HttpRequest("http://36.67.32.45/buanamegah/joblist/add");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        JSONObject json = null;
+        try {
+
+            String jsonStr = req.preparePost().sendAndReadString();
+            Log.d("jsonstr",jsonStr);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+
+            json = req.preparePost().withData(params).sendAndReadJSON();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
     public static String MD5(String md5) {
         try {
             MessageDigest md = java.security.MessageDigest.getInstance("MD5");
@@ -264,6 +397,31 @@ public class Fungsi {
         } catch (java.security.NoSuchAlgorithmException e) {
         }
         return null;
+    }
+
+    public static String parseTanggal(String tgl)
+    {
+        String result = null;
+        Date date = null;
+
+        String originalStringFormat = "yyyy-MM-dd HH:mm:ss";
+        String desiredStringFormat = "dd MMM yyyy @ HH:mm";
+
+        SimpleDateFormat readingFormat = new SimpleDateFormat(originalStringFormat);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(desiredStringFormat);
+        if(tgl == null){
+            result="";
+        }else {
+            try {
+                date = readingFormat.parse(tgl);
+
+                result = outputFormat.format(date).toString();
+            } catch (ParseException e) {
+
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
 }

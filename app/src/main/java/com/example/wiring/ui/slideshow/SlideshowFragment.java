@@ -29,6 +29,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.wiring.Checklist;
 import com.example.wiring.Fungsi;
+import com.example.wiring.Joblist;
 import com.example.wiring.MainActivity;
 import com.example.wiring.R;
 import com.example.wiring.UtamaActivity;
@@ -124,9 +125,14 @@ public class SlideshowFragment extends Fragment {
             ((Activity) getActivity()).overridePendingTransition(0, 0);
         } else if(item.getTitle()=="Joblist")
         {
-
-            //String uname = oslist.get(+info.position).get("kode").toString();
-
+            Intent modify_intent = new Intent(getActivity(), Joblist.class);
+            modify_intent.putExtra("devicetag", devicetag);
+            modify_intent.putExtra("description", description);
+            modify_intent.putExtra("main_wiring", id);
+            modify_intent.putExtra("status", "To Do");
+            modify_intent.putExtra("id", "0");
+            startActivity(modify_intent);
+            ((Activity) getActivity()).overridePendingTransition(0, 0);
 
             Log.d("contextmenu","joblist");
 

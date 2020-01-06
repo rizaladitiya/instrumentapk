@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,33 +20,38 @@ import java.util.HashMap;
 
 
 public class Joblist extends AppCompatActivity {
-    JSONParse postTask = null;
     JSONObject jsonObj;
     ProgressDialog pDialog;
     CheckBox checkLabel;
     CheckBox checkWrapping;
     CheckBox checkRegulator;
     EditText txtKeterangan;
+    EditText txtSolusi;
+    Spinner spinStatus;
     JSONParse checkListTask;
+    TextView txtDeviceTag;
     TextView txtID;
+    String main_wiring;
     private String Label, Wrapping, Regulator;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_joblist);
 
-        TextView txtDeviceTag = (TextView) findViewById(R.id.txtDeviceTag);
+        txtDeviceTag = (TextView) findViewById(R.id.txtDeviceTag);
         TextView txtDescription = (TextView) findViewById(R.id.txtDescription);
         txtID = (TextView) findViewById(R.id.txtID);
-        checkLabel =  (CheckBox) findViewById(R.id.checkLabel);
-        checkWrapping =  (CheckBox) findViewById(R.id.checkWrapping);
-        checkRegulator =  (CheckBox) findViewById(R.id.checkRegulator);
         Button btnSimpan = (Button) findViewById(R.id.btnSimpan);
         txtKeterangan = (EditText) findViewById(R.id.txtKeterangan);
+        txtSolusi = (EditText) findViewById(R.id.txtSolusi);
+        spinStatus = (Spinner) findViewById(R.id.spinStatus);
         String devicetag = getIntent().getStringExtra("devicetag").toString();
         String description = getIntent().getStringExtra("description").toString();
         String id = getIntent().getStringExtra("id").toString();
+        String status = getIntent().getStringExtra("status").toString();
+        main_wiring = getIntent().getStringExtra("main_wiring").toString();
         txtDeviceTag.setText(devicetag);
+        spinStatus.setSelection(getIndex(spinStatus, status));
         txtDescription.setText(description);
         txtID.setText(id);
         btnSimpan.setOnClickListener(new View.OnClickListener() {
@@ -80,16 +86,14 @@ public class Joblist extends AppCompatActivity {
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
-            Wrapping = String.valueOf(checkWrapping.isChecked());
-            Label = String.valueOf(checkLabel.isChecked());
-            Regulator = String.valueOf(checkRegulator.isChecked());
             param  = new HashMap<>();
-            param.put("regulator", Regulator);
-            param.put("wrapping", Wrapping);
-            param.put("label", Label);
-            param.put("keterangan", txtKeterangan.getText().toString());
+            param.put("devicetag", txtDeviceTag.getText().toString());
+            param.put("masalah", txtSolusi.getText().toString());
+            param.put("tindakan", txtKeterangan.getText().toString());
+            param.put("status", spinStatus.getSelectedItem().toString());
             param.put("user", global.user);
-            param.put("main_wiring", txtID.getText().toString());
+            param.put("main_wiring", main_wiring);
+            param.put("id", txtID.getText().toString());
 
             Log.d("hashmap param",param.toString());
         }
@@ -100,7 +104,8 @@ public class Joblist extends AppCompatActivity {
         protected Boolean doInBackground(Void... params) {
             try {
 
-                jsonObj = Fungsi.postChecklist(param);
+                jsonObj = Fungsi.postJoblist(param);
+                //jsonObj = new JSONObject();
 
             } catch (Exception e){
                 Log.d("error jsonObj",jsonObj.toString());
@@ -116,6 +121,8 @@ public class Joblist extends AppCompatActivity {
             pDialog.dismiss();
             try {
                 // Getting JSON Array
+
+                Toast.makeText(getApplicationContext(), spinStatus.getSelectedItem().toString(), Toast.LENGTH_LONG).show();
                     String status = jsonObj.getString("status").toString();
                     Log.d("device",status);
                     if(status.equals("success")){
@@ -130,5 +137,14 @@ public class Joblist extends AppCompatActivity {
             }
 
         }
+    }
+    private int getIndex(Spinner spinner, String myString){
+        for (int i=0;i<spinner.getCount();i++){
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+                return i;
+            }
+        }
+
+        return 0;
     }
 }

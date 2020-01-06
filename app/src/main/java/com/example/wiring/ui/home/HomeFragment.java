@@ -386,7 +386,7 @@ public class HomeFragment extends Fragment {
                 hasil1q3 = Fungsi.totalKg(hasil1q3);
                 hasil1q4 = Fungsi.totalKg(hasil1q4);
                 hasil2q1 = Fungsi.totalKg(hasil2q1);
-                hasil2q2 = Fungsi.totalKg(hasil1q2);
+                hasil2q2 = Fungsi.totalKg(hasil2q2);
                 hasil2q3 = Fungsi.totalKg(hasil2q3);
                 hasil2q4 = Fungsi.totalKg(hasil2q4);
                 hasil3q1 = Fungsi.totalKg(hasil3q1);

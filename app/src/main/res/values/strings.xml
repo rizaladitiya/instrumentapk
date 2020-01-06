@@ -28,7 +28,15 @@
     <string name="login_failed">"Login failed"</string>
     <string-array name="joblistmenu">
         <item>Tambah (add)</item>
+        <item>Cari</item>
         <item>View Tanggal</item>
-        <item>View Unclear</item>
+        <item>View To Do</item>
+        <item>View Doing</item>
+        <item>View Done</item>
+    </string-array>
+    <string-array name="jobliststatus">
+        <item>To Do</item>
+        <item>Doing</item>
+        <item>Done</item>
     </string-array>
 </resources>
